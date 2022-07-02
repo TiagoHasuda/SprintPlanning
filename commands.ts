@@ -169,7 +169,6 @@ export const onHistoryModalResponse = async (modal: ModalSubmitInteraction) => {
           newButton({
             label: option.toString(),
             customId: `btn_option_${option}`,
-            disabled: true,
           })
         )
       ),
@@ -182,7 +181,6 @@ export const onHistoryModalResponse = async (modal: ModalSubmitInteraction) => {
             newButton({
               label: option.toString(),
               customId: `btn_option_${option}`,
-              disabled: true,
             })
           )
         )
@@ -195,7 +193,6 @@ export const onHistoryModalResponse = async (modal: ModalSubmitInteraction) => {
             newButton({
               label: option.toString(),
               customId: `btn_option_${option}`,
-              disabled: true,
             })
           )
         )
@@ -234,7 +231,6 @@ export const onVote = async (interaction: Interaction) => {
         newButton({
           label: option.toString(),
           customId: `btn_option_${option}`,
-          disabled: true,
         })
       )
     ),
@@ -247,7 +243,6 @@ export const onVote = async (interaction: Interaction) => {
           newButton({
             label: option.toString(),
             customId: `btn_option_${option}`,
-            disabled: true,
           })
         )
       )
@@ -260,7 +255,6 @@ export const onVote = async (interaction: Interaction) => {
           newButton({
             label: option.toString(),
             customId: `btn_option_${option}`,
-            disabled: true,
           })
         )
       )
@@ -310,7 +304,6 @@ export const onReveal = async (interaction: Interaction) => {
           newButton({
             label: option.toString(),
             customId: `btn_option_${option}`,
-            disabled: true,
           })
         )
       ),
@@ -323,7 +316,6 @@ export const onReveal = async (interaction: Interaction) => {
             newButton({
               label: option.toString(),
               customId: `btn_option_${option}`,
-              disabled: true,
             })
           )
         )
@@ -336,7 +328,6 @@ export const onReveal = async (interaction: Interaction) => {
             newButton({
               label: option.toString(),
               customId: `btn_option_${option}`,
-              disabled: true,
             })
           )
         )
