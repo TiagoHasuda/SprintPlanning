@@ -162,7 +162,7 @@ export const onVote = async (interaction: Interaction) => {
     vote: parseInt(interaction.component.label as string),
   })
   if (typeof res === "string")
-    return await interaction.reply({ ephemeral: true, content: res })
+    return interaction.reply({ ephemeral: true, content: res })
 
   const userOptions = new MessageActionRow().addComponents(
     res.options.map((option) =>
@@ -179,7 +179,7 @@ export const onVote = async (interaction: Interaction) => {
   )
   if (Object.keys(res).includes("average"))
     content += `\n\`\`\`\`\`\`${(res as any).average.toString()}`
-    
+
   content += "```"
   const messageToSend = {
     content,
@@ -193,5 +193,80 @@ export const onVote = async (interaction: Interaction) => {
     const newMessage = await interaction.channel?.send(messageToSend)
     if (!!newMessage) data.changeMessageId(interaction.channelId, newMessage.id)
   }
-  await interaction.reply({ ephemeral: true, content: `Voted for ${interaction.component.label}` })
+  await interaction.reply({
+    ephemeral: true,
+    content: `Voted for ${interaction.component.label}`,
+  })
+}
+
+export const onReveal = async (interaction: Interaction) => {
+  if (!interaction.isButton()) return
+  const data = Data.getData()
+  const res = data.getGame({
+    channelId: interaction.channelId,
+    userId: interaction.user.id,
+  })
+
+  if (typeof res === "string")
+    return interaction.reply({ ephemeral: true, content: res })
+  
+  const userOptions = new MessageActionRow().addComponents(
+    res.options.map((option) =>
+      newButton({
+        label: option.toString(),
+        customId: `btn_option_${option.toString()}`,
+      })
+    )
+  )
+  let content = `\`\`\`${res.current}\`\`\`\`\`\`Voted:`
+  content += Object.keys(res.card.votes).reduce(
+    (prev, curr) => "\n" + prev + curr + "",
+    ""
+  )
+  if (Object.keys(res).includes("average"))
+    content += `\n\`\`\`\`\`\`${(res as any).average.toString()}`
+
+  content += "```"
+  const messageToSend = {
+    content,
+    components: [userOptions],
+  }
+  const findMessage = interaction.channel?.messages.cache.find(
+    (message) => message.id === res.messageId
+  )
+  if (!!findMessage) await findMessage.edit(messageToSend)
+  else {
+    const newMessage = await interaction.channel?.send(messageToSend)
+    if (!!newMessage) data.changeMessageId(interaction.channelId, newMessage.id)
+  }
+  await interaction.reply({
+    ephemeral: true,
+    content: `Revealed`,
+  })
+}
+
+export const onFinish = async (interaction: Interaction) => {
+  if (!interaction.isButton()) return
+
+  const data = Data.getData()
+  const res = data.finishGame({
+    channelId: interaction.channelId,
+    userId: interaction.user.id,
+  })
+
+  if (typeof res === 'string')
+    return interaction.reply({ ephemeral: true, content: res })
+
+  const findMessage = interaction.channel?.messages.cache.find(message => message.id === res.messageId)
+  if (!!findMessage) await findMessage.delete()
+
+  let content = "```Finished, results follow:```"
+  res.cards.forEach(card => {
+    const usrs = Object.keys(card.votes)
+    const sum = usrs.reduce((prev, curr) => prev + card.votes[curr], 0)
+    content += `\`\`\`Description: ${card.description}\nAverage: ${sum/usrs.length}\`\`\``
+  })
+  await interaction.channel?.send(content)
+  await interaction.channel?.messages.cache.find(message => message.id === interaction.message.id)?.delete()
+  await interaction.deferUpdate()
 }

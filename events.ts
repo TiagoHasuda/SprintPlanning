@@ -1,6 +1,6 @@
 import { ModalSubmitInteraction } from "discord-modals"
 import { Client, Interaction, Message } from "discord.js"
-import { onChangeHistory, onHelp, onHistoryModalResponse, onStart, onStartButton, onVote } from "./commands"
+import { onChangeHistory, onFinish, onHelp, onHistoryModalResponse, onReveal, onStart, onStartButton, onVote } from "./commands"
 
 export const onReady = () => {
   console.log("Connected")
@@ -30,6 +30,12 @@ export const onInteraction = async (client: Client, interaction: Interaction) =>
       break
     case interaction.customId.startsWith('btn_option_') ? interaction.customId : '':
       await onVote(interaction)
+      break
+    case 'btn_reveal':
+      await onReveal(interaction)
+      break
+    case 'btn_finish':
+      await onFinish(interaction)
       break
   }
 }

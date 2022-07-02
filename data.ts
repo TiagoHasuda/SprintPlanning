@@ -96,7 +96,10 @@ export class Data {
 
   vote(
     props: VoteProps
-  ): string | PlanningGame & { card: Card } | PlanningGame & { average: number, card: Card } {
+  ):
+    | string
+    | (PlanningGame & { card: Card })
+    | (PlanningGame & { average: number; card: Card }) {
     const game = this.findGame(props.channelId)
     if (!game) return "Game not running"
     if (!game.voting) return "Voting is closed"
@@ -136,7 +139,9 @@ export class Data {
     return copy
   }
 
-  getGame(props: GetGameProps): string | number {
+  getGame(
+    props: GetGameProps
+  ): string | (PlanningGame & { average: number; card: Card }) {
     const game = this.findGame(props.channelId)
     if (!game) return "Game not running"
     if (game.responsable != props.userId)
@@ -145,9 +150,12 @@ export class Data {
     const card = game.cards.find((card) => card.description === game.current)
     if (!card) return "Current history not found"
     const players = Object.keys(card.votes)
-    return (
-      players.reduce((prev, curr) => prev + card.votes[curr], 0) /
-      players.length
-    )
+    return {
+      ...game,
+      average:
+        players.reduce((prev, curr) => prev + card.votes[curr], 0) /
+        players.length,
+      card,
+    }
   }
 }
