@@ -162,17 +162,47 @@ export const onHistoryModalResponse = async (modal: ModalSubmitInteraction) => {
   if (typeof res === "string")
     await modal.reply({ ephemeral: true, content: res })
   else {
-    const userOptions = new MessageActionRow().addComponents(
-      res.options.map((option) =>
-        newButton({
-          label: option.toString(),
-          customId: `btn_option_${option.toString()}`,
-        })
+    const userOptions = [
+      new MessageActionRow().addComponents(
+        res.options.slice(0, 5).map((option) =>
+          newButton({
+            label: option.toString(),
+            customId: `btn_option_${option}`,
+            disabled: true,
+          })
+        )
+      ),
+    ]
+
+    if (res.options.length > 5)
+      userOptions.push(
+        new MessageActionRow().addComponents(
+          res.options.slice(5, 10).map((option) =>
+            newButton({
+              label: option.toString(),
+              customId: `btn_option_${option}`,
+              disabled: true,
+            })
+          )
+        )
       )
-    )
+
+    if (res.options.length > 10)
+      userOptions.push(
+        new MessageActionRow().addComponents(
+          res.options.slice(10, 15).map((option) =>
+            newButton({
+              label: option.toString(),
+              customId: `btn_option_${option}`,
+              disabled: true,
+            })
+          )
+        )
+      )
+
     const messageToSend = {
       content: `\`\`\`${res.current}\`\`\``,
-      components: [userOptions],
+      components: userOptions,
     }
     const findMessage = modal.channel?.messages.cache.find(
       (message) => message.id === res.messageId
@@ -197,14 +227,44 @@ export const onVote = async (interaction: Interaction) => {
   if (typeof res === "string")
     return interaction.reply({ ephemeral: true, content: res })
 
-  const userOptions = new MessageActionRow().addComponents(
-    res.options.map((option) =>
-      newButton({
-        label: option.toString(),
-        customId: `btn_option_${option.toString()}`,
-      })
+  const userOptions = [
+    new MessageActionRow().addComponents(
+      res.options.slice(0, 5).map((option) =>
+        newButton({
+          label: option.toString(),
+          customId: `btn_option_${option}`,
+          disabled: true,
+        })
+      )
+    ),
+  ]
+
+  if (res.options.length > 5)
+    userOptions.push(
+      new MessageActionRow().addComponents(
+        res.options.slice(5, 10).map((option) =>
+          newButton({
+            label: option.toString(),
+            customId: `btn_option_${option}`,
+            disabled: true,
+          })
+        )
+      )
     )
-  )
+
+  if (res.options.length > 10)
+    userOptions.push(
+      new MessageActionRow().addComponents(
+        res.options.slice(10, 15).map((option) =>
+          newButton({
+            label: option.toString(),
+            customId: `btn_option_${option}`,
+            disabled: true,
+          })
+        )
+      )
+    )
+
   let content = `\`\`\`${res.current}\`\`\`\`\`\`Voted:`
   content += Object.keys(res.card.votes).reduce(
     (prev, curr) => "\n" + prev + curr + "",
@@ -216,7 +276,7 @@ export const onVote = async (interaction: Interaction) => {
   content += "```"
   const messageToSend = {
     content,
-    components: [userOptions],
+    components: userOptions,
   }
   const findMessage = interaction.channel?.messages.cache.find(
     (message) => message.id === res.messageId
@@ -243,14 +303,43 @@ export const onReveal = async (interaction: Interaction) => {
   if (typeof res === "string")
     return interaction.reply({ ephemeral: true, content: res })
 
-  const userOptions = new MessageActionRow().addComponents(
-    res.options.map((option) =>
-      newButton({
-        label: option.toString(),
-        customId: `btn_option_${option.toString()}`,
-      })
-    )
-  )
+    const userOptions = [
+      new MessageActionRow().addComponents(
+        res.options.slice(0, 5).map((option) =>
+          newButton({
+            label: option.toString(),
+            customId: `btn_option_${option}`,
+            disabled: true,
+          })
+        )
+      ),
+    ]
+  
+    if (res.options.length > 5)
+      userOptions.push(
+        new MessageActionRow().addComponents(
+          res.options.slice(5, 10).map((option) =>
+            newButton({
+              label: option.toString(),
+              customId: `btn_option_${option}`,
+              disabled: true,
+            })
+          )
+        )
+      )
+  
+    if (res.options.length > 10)
+      userOptions.push(
+        new MessageActionRow().addComponents(
+          res.options.slice(10, 15).map((option) =>
+            newButton({
+              label: option.toString(),
+              customId: `btn_option_${option}`,
+              disabled: true,
+            })
+          )
+        )
+      )
   let content = `\`\`\`${res.current}\`\`\`\`\`\`Voted:`
   content += Object.keys(res.card.votes).reduce(
     (prev, curr) => "\n" + prev + curr + "",
@@ -262,7 +351,7 @@ export const onReveal = async (interaction: Interaction) => {
   content += "```"
   const messageToSend = {
     content,
-    components: [userOptions],
+    components: userOptions,
   }
   const findMessage = interaction.channel?.messages.cache.find(
     (message) => message.id === res.messageId
