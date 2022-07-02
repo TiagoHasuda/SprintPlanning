@@ -69,31 +69,43 @@ export const onStart = async (msg: Message) => {
     content: "Started",
     components: [row],
   })
-  const userOptions = [new MessageActionRow().addComponents(
-    optionsArray.slice(0, 5).map((option) =>
-      newButton({
-        label: option,
-        customId: `btn_option_${option}`,
-        disabled: true,
-      })
+  const userOptions = [
+    new MessageActionRow().addComponents(
+      optionsArray.slice(0, 5).map((option) =>
+        newButton({
+          label: option,
+          customId: `btn_option_${option}`,
+          disabled: true,
+        })
+      )
     ),
-  ), new MessageActionRow().addComponents(
-    optionsArray.slice(5, 10).map((option) =>
-      newButton({
-        label: option,
-        customId: `btn_option_${option}`,
-        disabled: true,
-      })
-    ),
-  ), new MessageActionRow().addComponents(
-    optionsArray.slice(10, 15).map((option) =>
-      newButton({
-        label: option,
-        customId: `btn_option_${option}`,
-        disabled: true,
-      })
-    ),
-  )]
+  ]
+
+  if (optionsArray.length > 5)
+    userOptions.push(
+      new MessageActionRow().addComponents(
+        optionsArray.slice(5, 10).map((option) =>
+          newButton({
+            label: option,
+            customId: `btn_option_${option}`,
+            disabled: true,
+          })
+        )
+      )
+    )
+
+  if (optionsArray.length > 10)
+    userOptions.push(
+      new MessageActionRow().addComponents(
+        optionsArray.slice(10, 15).map((option) =>
+          newButton({
+            label: option,
+            customId: `btn_option_${option}`,
+            disabled: true,
+          })
+        )
+      )
+    )
 
   const chMsg = await msg.channel.send({
     content: "```Awaiting first history...```",
@@ -230,7 +242,7 @@ export const onReveal = async (interaction: Interaction) => {
 
   if (typeof res === "string")
     return interaction.reply({ ephemeral: true, content: res })
-  
+
   const userOptions = new MessageActionRow().addComponents(
     res.options.map((option) =>
       newButton({
@@ -275,19 +287,25 @@ export const onFinish = async (interaction: Interaction) => {
     userId: interaction.user.id,
   })
 
-  if (typeof res === 'string')
+  if (typeof res === "string")
     return interaction.reply({ ephemeral: true, content: res })
 
-  const findMessage = interaction.channel?.messages.cache.find(message => message.id === res.messageId)
+  const findMessage = interaction.channel?.messages.cache.find(
+    (message) => message.id === res.messageId
+  )
   if (!!findMessage) await findMessage.delete()
 
   let content = "```Finished, results follow:```"
-  res.cards.forEach(card => {
+  res.cards.forEach((card) => {
     const usrs = Object.keys(card.votes)
     const sum = usrs.reduce((prev, curr) => prev + card.votes[curr], 0)
-    content += `\`\`\`Description: ${card.description}\nAverage: ${sum/usrs.length}\`\`\``
+    content += `\`\`\`Description: ${card.description}\nAverage: ${
+      sum / usrs.length
+    }\`\`\``
   })
   await interaction.channel?.send(content)
-  await interaction.channel?.messages.cache.find(message => message.id === interaction.message.id)?.delete()
+  await interaction.channel?.messages.cache
+    .find((message) => message.id === interaction.message.id)
+    ?.delete()
   await interaction.deferUpdate()
 }
