@@ -37,6 +37,10 @@ export const onStart = async (msg: Message) => {
   }
 
   const optionsArray = options.split(",")
+  if (optionsArray.length > 15) {
+    await msg.channel.send("Maximum number of options is 15")
+    return
+  }
 
   const data = Data.getData()
   const res = data.startGame({
@@ -65,18 +69,35 @@ export const onStart = async (msg: Message) => {
     content: "Started",
     components: [row],
   })
-  const userOptions = new MessageActionRow().addComponents(
-    optionsArray.map((option) =>
+  const userOptions = [new MessageActionRow().addComponents(
+    optionsArray.slice(0, 5).map((option) =>
       newButton({
         label: option,
         customId: `btn_option_${option}`,
         disabled: true,
       })
-    )
-  )
+    ),
+  ), new MessageActionRow().addComponents(
+    optionsArray.slice(5, 10).map((option) =>
+      newButton({
+        label: option,
+        customId: `btn_option_${option}`,
+        disabled: true,
+      })
+    ),
+  ), new MessageActionRow().addComponents(
+    optionsArray.slice(10, 15).map((option) =>
+      newButton({
+        label: option,
+        customId: `btn_option_${option}`,
+        disabled: true,
+      })
+    ),
+  )]
+
   const chMsg = await msg.channel.send({
     content: "```Awaiting first history...```",
-    components: [userOptions],
+    components: userOptions,
   })
   data.changeMessageId(msg.channelId, chMsg.id)
 }
