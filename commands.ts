@@ -1,10 +1,9 @@
-import { Modal, ModalSubmitInteraction, showModal } from "discord-modals"
+import { ModalSubmitInteraction, showModal } from "discord-modals"
 import {
   Client,
   Interaction,
   Message,
   MessageActionRow,
-  TextInputComponent,
 } from "discord.js"
 import { newButton } from "./button"
 import { Data } from "./data"
@@ -37,6 +36,8 @@ export const onStart = async (msg: Message) => {
   }
 
   const optionsArray = options.split(",")
+  if (!optionsArray[optionsArray.length - 1])
+    optionsArray.pop()
   if (optionsArray.length > 15) {
     await msg.channel.send("Maximum number of options is 15")
     return
