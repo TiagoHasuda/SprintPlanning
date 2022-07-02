@@ -35,9 +35,8 @@ export const onStart = async (msg: Message) => {
     return
   }
 
-  const optionsArray = options.split(",")
-  if (!optionsArray[optionsArray.length - 1])
-    optionsArray.pop()
+  let optionsArray = options.split(",")
+  optionsArray = optionsArray.filter(opt => !!opt)
   if (optionsArray.length > 15) {
     await msg.channel.send("Maximum number of options is 15")
     return
