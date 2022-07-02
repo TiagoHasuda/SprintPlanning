@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "start": "ts-node main.ts"
+  },
+  "dependencies": {
+    "discord-modals": "^1.3.7",
+    "discord.js": "^13.8.1",
+    "dotenv": "^16.0.1",
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.4"
+  }
+}
