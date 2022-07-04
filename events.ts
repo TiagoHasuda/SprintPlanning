@@ -7,8 +7,8 @@ export const onReady = () => {
 }
 
 export const onMessage = async (msg: Message) => {
-  if (!msg.content.startsWith("!")) return
-  const command = msg.content.replace(/^!([^\s]*).*$/, "$1")
+  if (!msg.content.startsWith(":")) return
+  const command = msg.content.replace(/^:([^\s]*).*$/, "$1")
   switch (command) {
     case "help":
       await onHelp(msg)
