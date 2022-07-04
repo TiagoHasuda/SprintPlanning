@@ -265,7 +265,7 @@ export const onVote = async (interaction: Interaction) => {
     ""
   )
   if (Object.keys(res).includes("average"))
-    content += `\n\`\`\`\`\`\`${(res as any).average.toString()}`
+    content += `\n\`\`\`\`\`\`Average: ${(res as any).average.toString()}`
 
   content += "```"
   const messageToSend = {
@@ -337,7 +337,7 @@ export const onReveal = async (interaction: Interaction) => {
     ""
   )
   if (Object.keys(res).includes("average"))
-    content += `\n\`\`\`\`\`\`${(res as any).average.toString()}`
+    content += `\n\`\`\`\`\`\`Average: ${(res as any).average.toString()}`
 
   content += "```"
   const messageToSend = {
