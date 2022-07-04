@@ -333,7 +333,7 @@ export const onReveal = async (interaction: Interaction) => {
       )
   let content = `\`\`\`${res.current}\`\`\`\`\`\`Voted:`
   content += Object.keys(res.card.votes).reduce(
-    (prev, curr) => "\n" + prev + curr + "",
+    (prev, curr) => prev + "\n" + curr + " : " + res.card.votes[curr],
     ""
   )
   if (Object.keys(res).includes("average"))
